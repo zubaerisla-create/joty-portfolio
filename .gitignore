@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+env/
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/.env.production.local
+frontend/.env.development.local
+
+# Python / FastAPI
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+*.db
+portfolio.db
+backend/.env
+.pytest_cache/
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log

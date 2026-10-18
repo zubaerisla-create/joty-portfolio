@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-canvas: #FFFCF7;
+  --color-charcoal: #242126;
+  --color-muted: #77717A;
+  --color-pink: #F6C7D8;
+  --color-yellow: #FFF2B8;
+  --color-white: #FFFFFF;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-canvas);
+  color: var(--color-charcoal);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background-color: #F6C7D8;
+  color: #242126;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFFCF7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E4DFDE;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A49FA8;
+}
+
+/* Accessible focus ring */
+:focus-visible {
+  outline: 2px solid #242126;
+  outline-offset: 2px;
+}
+
+/* Section dividers and editorial accents */
+.editorial-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(119, 113, 122, 0.1) 0%,
+    rgba(119, 113, 122, 0.25) 50%,
+    rgba(119, 113, 122, 0.1) 100%
+  );
+}
+
+.noise-overlay {
+  background-image: radial-gradient(rgba(36, 33, 38, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
