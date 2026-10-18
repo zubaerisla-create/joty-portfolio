@@ -1,0 +1,105 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-and-build:
+    name: Test & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Backend Dependencies & Run Pytest
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          PYTHONPATH=backend pytest backend/tests -v
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Frontend Dependencies & Build
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+  deploy:
+    name: Deploy to VPS
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script_stop: true
+          script: |
+            echo "=== Initiating deployment on VPS ==="
+            mkdir -p /var/www
+            cd /var/www
+
+            if [ ! -d "jotirmoya-portfolio/.git" ]; then
+              git clone https://github.com/zubaerisla-create/joty-portfolio.git jotirmoya-portfolio
+              cd jotirmoya-portfolio
+            else
+              cd jotirmoya-portfolio
+              git fetch origin main
+              git reset --hard origin/main
+            fi
+
+            # Backend deployment
+            cd /var/www/jotirmoya-portfolio/backend
+            if [ ! -d ".venv" ]; then
+              python3 -m venv .venv
+            fi
+            .venv/bin/pip install --upgrade pip
+            .venv/bin/pip install -r requirements.txt
+
+            cat << 'EOF' > .env
+            PROJECT_NAME="Jotirmoya Bhakta Sarker Portfolio API"
+            VERSION="1.0.0"
+            ENVIRONMENT="production"
+            DEBUG=False
+            DATABASE_URL="sqlite:///./portfolio.db"
+            CORS_ORIGINS="https://jotirmoya.hosensoft.com,http://jotirmoya.hosensoft.com,http://31.97.180.176"
+            RATE_LIMIT_CONTACT="10/minute"
+            HOST="127.0.0.1"
+            PORT=8008
+            EOF
+
+            pm2 delete jotirmoya-backend 2>/dev/null || true
+            pm2 start .venv/bin/uvicorn --name "jotirmoya-backend" -- app.main:app --host 127.0.0.1 --port 8008
+
+            # Frontend deployment
+            cd /var/www/jotirmoya-portfolio/frontend
+            cat << 'EOF' > .env.local
+            NEXT_PUBLIC_API_URL=https://jotirmoya.hosensoft.com
+            EOF
+
+            npm install
+            npm run build
+
+            pm2 delete jotirmoya-frontend 2>/dev/null || true
+            pm2 start npm --name "jotirmoya-frontend" -- run start -- -p 3008
+
+            pm2 save
+
+            # Nginx check and reload
+            nginx -t && systemctl reload nginx
+
+            echo "=== VPS Deployment Verified & Complete ==="

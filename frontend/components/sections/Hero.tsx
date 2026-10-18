@@ -2,8 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowDown, Compass, Mail, Sparkles, GraduationCap } from "lucide-react";
+import { ArrowDown, Compass, Mail, GraduationCap } from "lucide-react";
 import { ConnectedNodes } from "@/components/ui/ConnectedNodes";
 import { PortfolioData } from "@/types/portfolio";
 
@@ -17,7 +18,6 @@ export function Hero({ portfolio }: HeroProps) {
       id="home"
       className="relative min-h-[92vh] pt-32 pb-20 flex flex-col justify-center overflow-hidden"
     >
-      {/* Editorial top accent rule */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Editorial Introduction & Typography */}
@@ -43,18 +43,35 @@ export function Hero({ portfolio }: HeroProps) {
               </div>
             </motion.div>
 
-            {/* Main Headline */}
+            {/* Profile Avatar & Main Headline */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="space-y-3"
+              className="space-y-4"
             >
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold tracking-tight text-charcoal leading-[1.1]">
-                {portfolio.name}
-              </h1>
+              <div className="flex items-center gap-4 sm:gap-5">
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 border-charcoal/15 shadow-card shrink-0 bg-pastel-pink/20 ring-4 ring-white/80">
+                  <Image
+                    src="/images/jotirmoy.webp"
+                    alt="Jotirmoya Bhakta Sarker"
+                    fill
+                    sizes="(max-width: 640px) 64px, 80px"
+                    className="object-cover object-top"
+                    priority
+                  />
+                </div>
+                <div>
+                  <span className="text-[11px] font-mono uppercase tracking-widest text-muted-gray block">
+                    Undergraduate Portfolio
+                  </span>
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold tracking-tight text-charcoal leading-[1.1]">
+                    {portfolio.name}
+                  </h1>
+                </div>
+              </div>
 
-              <p className="text-lg sm:text-xl font-medium text-charcoal/90 max-w-xl leading-relaxed">
+              <p className="text-lg sm:text-xl font-medium text-charcoal/90 max-w-xl leading-relaxed pt-1">
                 <span className="relative inline-block px-1.5 py-0.5 rounded bg-butter-yellow/60 mr-1.5">
                   Software Engineering Student.
                 </span>

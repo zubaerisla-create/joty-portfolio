@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { BookOpen, Brain, Users, Lightbulb, Compass, Award } from "lucide-react";
+import { BookOpen, Brain, Users, Lightbulb, Compass, GraduationCap } from "lucide-react";
 import { PortfolioData } from "@/types/portfolio";
 
 interface AboutProps {
@@ -63,7 +64,7 @@ export function About({ portfolio }: AboutProps) {
 
         {/* Editorial Two-Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Authentic Bio Narrative */}
+          {/* Left Column: Authentic Bio Narrative with Portrait */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -71,14 +72,35 @@ export function About({ portfolio }: AboutProps) {
             transition={{ duration: 0.6 }}
             className="lg:col-span-7 space-y-6"
           >
+            {/* Bio Card with Portrait */}
             <div className="bg-white rounded-card p-8 sm:p-10 border border-charcoal/10 shadow-subtle space-y-6">
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-pastel-pink/40 text-charcoal border border-pastel-pink-border">
-                Student Perspective
-              </span>
+              <div className="flex flex-col sm:flex-row gap-6 items-start">
+                {/* Profile Portrait Card */}
+                <div className="relative w-28 h-36 sm:w-32 sm:h-44 rounded-2xl overflow-hidden border-2 border-charcoal/10 shadow-subtle shrink-0 bg-pastel-pink/20">
+                  <Image
+                    src="/images/jotirmoy.webp"
+                    alt="Jotirmoya Bhakta Sarker"
+                    fill
+                    sizes="(max-width: 640px) 112px, 128px"
+                    className="object-cover object-top"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 p-1.5 bg-charcoal/75 backdrop-blur-[2px] text-center">
+                    <span className="text-[9px] font-mono uppercase text-white/95 tracking-wider block">
+                      DIU • SWE
+                    </span>
+                  </div>
+                </div>
 
-              <p className="text-lg sm:text-xl font-serif leading-relaxed text-charcoal">
-                “{about.summary}”
-              </p>
+                <div className="space-y-3 flex-1">
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-pastel-pink/40 text-charcoal border border-pastel-pink-border">
+                    Student Perspective
+                  </span>
+
+                  <p className="text-base sm:text-lg font-serif leading-relaxed text-charcoal">
+                    “{about.summary}”
+                  </p>
+                </div>
+              </div>
 
               <div className="w-12 h-[1px] bg-charcoal/20" />
 
@@ -109,8 +131,9 @@ export function About({ portfolio }: AboutProps) {
                   Department of Software Engineering
                 </span>
               </div>
-              <div className="px-3 py-1.5 rounded-full bg-white/90 border border-butter-yellow-border text-xs font-medium text-charcoal whitespace-nowrap self-start sm:self-auto">
-                BSc in Software Engineering
+              <div className="px-3 py-1.5 rounded-full bg-white/90 border border-butter-yellow-border text-xs font-medium text-charcoal whitespace-nowrap self-start sm:self-auto flex items-center gap-1.5">
+                <GraduationCap className="w-3.5 h-3.5 text-charcoal/70" />
+                <span>BSc in Software Engineering</span>
               </div>
             </div>
           </motion.div>
@@ -127,7 +150,7 @@ export function About({ portfolio }: AboutProps) {
               Core Principles &amp; Mindset
             </h3>
 
-            {PILLARS.map((pillar, i) => {
+            {PILLARS.map((pillar) => {
               const Icon = pillar.icon;
               return (
                 <div
