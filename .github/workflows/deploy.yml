@@ -69,6 +69,7 @@ jobs:
             fi
             .venv/bin/pip install --upgrade pip
             .venv/bin/pip install -r requirements.txt
+            chmod +x run_backend.sh
 
             cat << 'EOF' > .env
             PROJECT_NAME="Jotirmoya Bhakta Sarker Portfolio API"
@@ -83,7 +84,7 @@ jobs:
             EOF
 
             pm2 delete jotirmoya-backend 2>/dev/null || true
-            pm2 start .venv/bin/uvicorn --name "jotirmoya-backend" -- app.main:app --host 127.0.0.1 --port 8008
+            pm2 start /var/www/jotirmoya-portfolio/backend/run_backend.sh --name "jotirmoya-backend"
 
             # Frontend deployment
             cd /var/www/jotirmoya-portfolio/frontend
@@ -101,5 +102,10 @@ jobs:
 
             # Nginx check and reload
             nginx -t && systemctl reload nginx
+
+            # Health verification
+            sleep 2
+            curl -s http://127.0.0.1:8008/api/health
+            curl -s -I http://127.0.0.1:3008 | head -n 4
 
             echo "=== VPS Deployment Verified & Complete ==="
